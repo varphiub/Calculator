@@ -3,284 +3,181 @@ package Calculator;
 import java.awt.*;
 import java.awt.event.*;
 
-
 public class MyCalc extends WindowAdapter implements ActionListener {
     Frame f;
     Label l1;
-    Button b1,b2,b3,b4,b5,b6,b7,b8,b9,b0;
-    Button badd,bsub,bmult,bdiv,bmod,bcalc,bclr,bpts,bneg,bback;
+    Button[] numButtons = new Button[10];
+    Button badd, bsub, bmult, bdiv, bmod, bcalc, bclr, bpts, bneg, bback;
     double xd;
-    double num1,num2,check;
+    double num1, num2, check;
 
-
-    MyCalc(){
+    MyCalc() {
         f = new Frame("MY CALCULATOR");
+        f.setSize(360, 500);
+        f.setLayout(new BorderLayout());
 
-        l1 = new Label();
+        l1 = new Label("", Label.RIGHT);
         l1.setBackground(Color.YELLOW);
-        l1.setBounds(50,50,260,60);
+        l1.setFont(new Font("Arial", Font.PLAIN, 24));
+        l1.setPreferredSize(new Dimension(360, 60));
+        f.add(l1, BorderLayout.NORTH);
 
-        b1=new Button("1");
-        b1.setBounds(50,340,50,50);
+        // Panel for buttons
+        Panel pad = new Panel();
+        pad.setLayout(new GridLayout(5, 4, 8, 8));
+        pad.setBackground(Color.LIGHT_GRAY);
 
-        b2=new Button("2");
-        b2.setBounds(120,340,50,50);
+        // Number buttons
+        for (int i = 1; i <= 9; i++) {
+            numButtons[i] = new Button(String.valueOf(i));
+            numButtons[i].addActionListener(this);
+        }
+        numButtons[0] = new Button("0");
+        numButtons[0].addActionListener(this);
 
-        b3=new Button("3");
-        b3.setBounds(190,340,50,50);
+        // Operator and function buttons
+        badd = new Button("+"); badd.addActionListener(this);
+        bsub = new Button("-"); bsub.addActionListener(this);
+        bmult = new Button("*"); bmult.addActionListener(this);
+        bdiv = new Button("/");  bdiv.addActionListener(this);
+        bmod = new Button("%");  bmod.addActionListener(this);
+        bcalc = new Button("="); bcalc.addActionListener(this);
+        bclr = new Button("CE"); bclr.addActionListener(this);
+        bpts = new Button(".");  bpts.addActionListener(this);
+        bneg = new Button("+/-");bneg.addActionListener(this);
+        bback = new Button("←"); bback.addActionListener(this);
 
-        b4=new Button("4");
-        b4.setBounds(50,270,50,50);
+        // Add buttons to panel in a standard calculator layout
+        pad.add(bclr);   // Row 1
+        pad.add(bback);
+        pad.add(bmod);
+        pad.add(bdiv);
 
-        b5=new Button("5");
-        b5.setBounds(120,270,50,50);
+        pad.add(numButtons[7]); // Row 2
+        pad.add(numButtons[8]);
+        pad.add(numButtons[9]);
+        pad.add(bmult);
 
-        b6=new Button("6");
-        b6.setBounds(190,270,50,50);
+        pad.add(numButtons[4]); // Row 3
+        pad.add(numButtons[5]);
+        pad.add(numButtons[6]);
+        pad.add(bsub);
 
-        b7=new Button("7");
-        b7.setBounds(50,200,50,50);
+        pad.add(numButtons[1]); // Row 4
+        pad.add(numButtons[2]);
+        pad.add(numButtons[3]);
+        pad.add(badd);
 
-        b8=new Button("8");
-        b8.setBounds(120,200,50,50);
+        pad.add(bneg);          // Row 5
+        pad.add(numButtons[0]);
+        pad.add(bpts);
+        pad.add(bcalc);
 
-        b9=new Button("9");
-        b9.setBounds(190,200,50,50);
-
-        b0=new Button("0");
-        b0.setBounds(120,410,50,50);
-
-        bneg=new Button("+/-");
-        bneg.setBounds(50,410,50,50);
-
-        bpts=new Button("pts");
-        bpts.setBounds(50,410,50,50);
-
-        bback=new Button("-->");
-        b1.setBounds(120,130,50,50);
-
-        badd=new Button("+");
-        badd.setBounds(260,340,50,50);
-        bsub=new Button("-");
-        bsub.setBounds(260,270,50,50);
-        bmult=new Button("*");
-        bmult.setBounds(260,200,50,50);
-        bdiv=new Button("/");
-        bdiv.setBounds(260,130,50,50);
-        bmod=new Button("%");
-        bmod.setBounds(190,130,50,50);
-        bcalc=new Button("=");
-        bcalc.setBounds(245,410,65,50);
-        bclr=new Button("CE");
-        bclr.setBounds(50,130,65,50);
-
-        b1.addActionListener(this);
-        b2.addActionListener(this);
-        b3.addActionListener(this);
-        b4.addActionListener(this);
-        b5.addActionListener(this);
-        b6.addActionListener(this);
-        b7.addActionListener(this);
-        b8.addActionListener(this);
-        b9.addActionListener(this);
-        b0.addActionListener(this);
-
-        bpts.addActionListener(this);
-        bneg.addActionListener(this);
-        bback.addActionListener(this);
-
-        badd.addActionListener(this);
-        bsub.addActionListener(this);
-        bmult.addActionListener(this);
-        bdiv.addActionListener(this);
-        bmod.addActionListener(this);
-        bcalc.addActionListener(this);
-        bclr.addActionListener(this);
+        f.add(pad, BorderLayout.CENTER);
 
         f.addWindowListener(this);
-//ADDING TO FRAME
-        f.add(l1);
-        f.add(b1); f.add(b2); f.add(b3); f.add(b4); f.add(b5);f.add(b6); f.add(b7); f.add(b8);f.add(b9);f.add(b0);
-
-        f.add(badd); f.add(bsub); f.add(bmod); f.add(bmult); f.add(bdiv); f.add(bmod);f.add(bcalc);
-
-        f.add(bclr); f.add(bpts);f.add(bneg); f.add(bback);
-
-        f.setSize(360,500);
-        f.setLayout(null);
         f.setVisible(true);
     }
-    //FOR CLOSING THE WINDOW
+
     public void windowClosing(WindowEvent e) {
         f.dispose();
     }
 
-    public void actionPerformed(ActionEvent e){
-        String z,zt;
-        //NUMBER BUTTON
-        if(e.getSource()==b1){
-            zt=l1.getText();
-            z=zt+"1";
-            l1.setText(z);
+    public void actionPerformed(ActionEvent e) {
+        String zt = l1.getText();
+        Object src = e.getSource();
+        // Number buttons
+        for (int i = 0; i <= 9; i++) {
+            if (src == numButtons[i]) {
+                l1.setText(zt + i);
+                return;
+            }
         }
-        if(e.getSource()==b2){
-            zt=l1.getText();
-            z=zt+"2";
-            l1.setText(z);
+        // Decimal
+        if (src == bpts) {
+            if (!zt.contains(".")) {
+                l1.setText(zt + ".");
+            }
+            return;
         }
-        if(e.getSource()==b3){
-            zt=l1.getText();
-            z=zt+"3";
-            l1.setText(z);
+        // Negative
+        if (src == bneg) {
+            if (zt.isEmpty()) {
+                l1.setText("-");
+            } else if (zt.startsWith("-")) {
+                l1.setText(zt.substring(1));
+            } else {
+                l1.setText("-" + zt);
+            }
+            return;
         }
-        if(e.getSource()==b4){
-            zt=l1.getText();
-            z=zt+"4";
-            l1.setText(z);
+        // Backspace
+        if (src == bback) {
+            if (!zt.isEmpty()) {
+                l1.setText(zt.substring(0, zt.length() - 1));
+            }
+            return;
         }
-        if(e.getSource()==b5){
-            zt=l1.getText();
-            z=zt+"5";
-            l1.setText(z);
-        }
-        if(e.getSource()==b6){
-            zt=l1.getText();
-            z=zt+"6";
-            l1.setText(z);
-        }
-        if(e.getSource()==b7){
-            zt=l1.getText();
-            z=zt+"7";
-            l1.setText(z);
-        }
-        if(e.getSource()==b8){
-            zt=l1.getText();
-            z=zt+"8";
-            l1.setText(z);
-        }
-        if(e.getSource()==b9){
-            zt=l1.getText();
-            z=zt+"9";
-            l1.setText(z);
-        }
-        if(e.getSource()==b0){
-            zt=l1.getText();
-            z=zt+"0";
-            l1.setText(z);
+        // Clear
+        if (src == bclr) {
+            num1 = 0;
+            num2 = 0;
+            check = 0;
+            xd = 0;
+            l1.setText("");
+            return;
         }
 
-        if(e.getSource()==bpts){  //ADD DECIMAL PTS
-            zt=l1.getText();
-            z=zt+".";
-            l1.setText(z);
-        }
-        if(e.getSource()==bneg){ //FOR NEGATIVE
-            zt=l1.getText();
-            z="-"+zt;
-            l1.setText(z);
+        // Operators
+        if (src == badd || src == bsub || src == bmult || src == bdiv || src == bmod) {
+            try {
+                num1 = Double.parseDouble(zt);
+            } catch (NumberFormatException ex) {
+                l1.setText("Invalid Format");
+                return;
+            }
+            l1.setText("");
+            if (src == badd) check = 1;
+            else if (src == bsub) check = 2;
+            else if (src == bmult) check = 3;
+            else if (src == bdiv) check = 4;
+            else if (src == bmod) check = 5;
+            return;
         }
 
-        if(e.getSource()==bback){  // FOR  BACKSPACE
-            zt=l1.getText();
-            try{
-                z=zt.substring(0, zt.length()-1);
-            }catch(StringIndexOutOfBoundsException f){return;}
-            l1.setText(z);
-        }
-        //AIRTHMETIC BUTTON
-        if(e.getSource()==badd){                     //FOR ADDITION
-            try{
-                num1=Double.parseDouble(l1.getText());
-            }catch(NumberFormatException f){
-                l1.setText("Invalid Format");
+        // Calculate
+        if (src == bcalc) {
+            try {
+                num2 = Double.parseDouble(zt);
+            } catch (Exception ex) {
+                l1.setText("ENTER NUMBER FIRST");
                 return;
             }
-            z="";
-            l1.setText(z);
-            check=1;
-        }
-        if(e.getSource()==bsub){                    //FOR SUBTRACTION
-            try{
-                num1=Double.parseDouble(l1.getText());
-            }catch(NumberFormatException f){
-                l1.setText("Invalid Format");
-                return;
+            switch ((int) check) {
+                case 1: xd = num1 + num2; break;
+                case 2: xd = num1 - num2; break;
+                case 3: xd = num1 * num2; break;
+                case 4: 
+                    if (num2 == 0) {
+                        l1.setText("DIV BY ZERO");
+                        return;
+                    }
+                    xd = num1 / num2; break;
+                case 5: 
+                    if (num2 == 0) {
+                        l1.setText("DIV BY ZERO");
+                        return;
+                    }
+                    xd = num1 % num2; break;
+                default:
+                    l1.setText("Select Op");
+                    return;
             }
-            z="";
-            l1.setText(z);
-            check=2;
-        }
-        if(e.getSource()==bmult){                   //FOR MULTIPLICATION
-            try{
-                num1=Double.parseDouble(l1.getText());
-            }catch(NumberFormatException f){
-                l1.setText("Invalid Format");
-                return;
-            }
-            z="";
-            l1.setText(z);
-            check=3;
-        }
-        if(e.getSource()==bdiv){                   //FOR DIVISION
-            try{
-                num1=Double.parseDouble(l1.getText());
-            }catch(NumberFormatException f){
-                l1.setText("Invalid Format");
-                return;
-            }
-            z="";
-            l1.setText(z);
-            check=4;
-        }
-        if(e.getSource()==bmod){                  //FOR MOD/REMAINDER
-            try{
-                num1=Double.parseDouble(l1.getText());
-            }catch(NumberFormatException f){
-                l1.setText("Invalid Format");
-                return;
-            }
-            z="";
-            l1.setText(z);
-            check=5;
-        }
-        //RESULT BUTTON
-        if(e.getSource()==bcalc){
-            try{
-                num2=Double.parseDouble(l1.getText());
-            }catch(Exception f){
-                l1.setText("ENTER NUMBER FIRST ");
-                return;
-            }
-            if(check==1)
-                xd =num1+num2;
-            if(check==2)
-                xd =num1-num2;
-            if(check==3)
-                xd =num1*num2;
-            if(check==4)
-                xd =num1/num2;
-            if(check==5)
-                xd =num1%num2;
             l1.setText(String.valueOf(xd));
         }
-        //FOR CLEARING THE LABEL and Memory
-        if(e.getSource()==bclr){
-            num1=0;
-            num2=0;
-            check=0;
-            xd=0;
-            z="";
-            l1.setText(z);
-        }
-
     }
-    //MAIN METHOD where objects of MyCalc is instantaiated
-    public static void main(String args[]){
+
+    public static void main(String args[]) {
         new MyCalc();
     }
 }
-
-
-
-
-
